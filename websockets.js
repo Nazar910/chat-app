@@ -5,7 +5,8 @@ const bindEvents = socket => {
 
     socket.on('message', data => {
         console.log('message', data);
-    })
+        socket.broadcast.emit('message', data);
+    });
 
 };
 
@@ -14,7 +15,6 @@ module.exports = server => {
 
     io.on('connection', socket => {
         bindEvents(socket);
-        // socket.emit('message', 'Hello');
         console.log('A user connected');
     });
 
