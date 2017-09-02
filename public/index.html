@@ -6,5 +6,10 @@
 </head>
 <body>
     <h1>Hello!</h1>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.emit('message', 'Hello from frontend');
+    </script>
 </body>
 </html>
