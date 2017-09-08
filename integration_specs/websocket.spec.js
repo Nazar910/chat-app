@@ -23,27 +23,19 @@ describe('WebSockets', () => {
         const type = 'message';
 
         let messageHanlderSpy;
-
-
+        
         beforeEach(() => {
             messageHanlderSpy = sinon.spy();
-            client2.on(type, messageHanlderSpy);
         });
 
         it('should be caught by another socket', async () => {
-            const message = 'Hello';
+            const expectedMessage = 'Hello';
 
-            client1.emit(type, message);
+            client1.emit(type, expectedMessage);
 
-            await new Promise(resolve => setTimeout(resolve, 100));
+            const actualMessage = await helpers.waitForMessage(type, client2, 100);
 
-            const { callCount } = messageHanlderSpy;
-
-            expect(callCount).to.equal(1);
-
-            const { args } = messageHanlderSpy.getCall(0);
-
-            expect(args).to.deep.equal([message]);
+            expect(actualMessage).to.equal(expectedMessage);
         })
 
     })
