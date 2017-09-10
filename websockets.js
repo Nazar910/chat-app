@@ -6,6 +6,8 @@ const bindEvents = socket => {
     socket.on('message', data => {
         console.log('message', data);
         socket.broadcast.emit('message', data);
+        //save message to db
+        //if something goes wrong -> send message_error event
     });
 
 };

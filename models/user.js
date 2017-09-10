@@ -1,0 +1,54 @@
+'use strict';
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const ChatRoom = require('./chat-room');
+
+const bcrypt = require('bcryptjs');
+
+const userSchema = new Schema({
+    name: String,
+    lastName: String,
+    email: {
+        type: String,
+        unique: true
+    },
+    password: String,
+    company: String
+});
+
+Object.assign(userSchema.statics, {
+
+    findByEmail(email) {
+        return this.findOne({
+            email
+        })
+    },
+
+    findById(id) {
+        return this.findOne({
+            _id: id
+        })
+    },
+
+    async deleteById(id) {
+        await ChatRoom.kickUserById(id);
+
+        return this.remove(id);
+    }
+
+});
+
+Object.assign(userSchema.methods, {
+
+    async hashPassword() {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+    },
+
+    isValidPassword(candidatePassword) {
+        return bcrypt.compare(candidatePassword, this.password);
+    }
+});
+
+module.exports = mongoose.model('User', userSchema);
