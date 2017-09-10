@@ -6,38 +6,35 @@ const sinon = require('sinon');
 
 const helpers = require('../helpers');
 
+const messageTypes = ['message'];
+
+
 describe('WebSockets', () => {
 
-    let client1;
-    let client2;
+    for (const type of messageTypes) {
 
-    before(async () => {
-        await helpers.ensureApp();
+        let client1;
+        let client2;
 
-        const uri = 'ws://localhost:3000';
-        client1 = io.connect(uri);
-        client2 = io.connect(uri);
-    });
+        before(async () => {
+            await helpers.ensureApp();
 
-    describe('when one socket emits message', () => {
-        const type = 'message';
-
-        let messageHanlderSpy;
-        
-        beforeEach(() => {
-            messageHanlderSpy = sinon.spy();
+            const uri = 'ws://localhost:3000';
+            client1 = io.connect(uri);
+            client2 = io.connect(uri);
         });
 
-        it('should be caught by another socket', async () => {
-            const expectedMessage = 'Hello';
+        describe(type, () => {
+            it('should be caught by another socket', async () => {
+                const expectedMessage = 'Hello';
 
-            client1.emit(type, expectedMessage);
+                client1.emit(type, expectedMessage);
 
-            const actualMessage = await helpers.waitForMessage(type, client2, 100);
+                const actualMessage = await helpers.waitForMessage(type, client2, 100);
 
-            expect(actualMessage).to.equal(expectedMessage);
+                expect(actualMessage).to.equal(expectedMessage);
+            })
         })
-
-    })
+    }
 
 });
