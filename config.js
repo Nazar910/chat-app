@@ -3,5 +3,5 @@
 const envs = process.env;
 
 module.exports = {
-    FRONTEND_PORT: envs.FRONTEND_PORT || 3000
+    FRONTEND_PORT: envs.FRONTEND_PORT || 5000
 };

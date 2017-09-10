@@ -2,26 +2,31 @@
 const io = require('socket.io-client');
 
 const { expect } = require('chai');
-const sinon = require('sinon');
 
 const helpers = require('../helpers');
 
 const messageTypes = ['message'];
-
+const wsUri = 'ws://localhost:5000';
 
 describe('WebSockets', () => {
+
+    before(async () => {
+        await helpers.ensureApp();
+    });
 
     for (const type of messageTypes) {
 
         let client1;
         let client2;
 
-        before(async () => {
-            await helpers.ensureApp();
+        beforeEach(() => {
+            client1 = io.connect(wsUri);
+            client2 = io.connect(wsUri);
+        });
 
-            const uri = 'ws://localhost:3000';
-            client1 = io.connect(uri);
-            client2 = io.connect(uri);
+        afterEach(() => {
+            client1.disconnect();
+            client2.disconnect();
         });
 
         describe(type, () => {

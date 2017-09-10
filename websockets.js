@@ -18,6 +18,10 @@ module.exports = server => {
     io.on('connection', socket => {
         bindEvents(socket);
         console.log('A user connected');
+
+        socket.on('disconnect', () => {
+            console.log('a user disconnected');
+        })
     });
 
     return server;
